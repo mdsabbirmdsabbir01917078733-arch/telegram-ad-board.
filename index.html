@@ -1,258 +1,144 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<title>Double Earning Bot</title>
+<meta charset="utf-8">
+<title>Double earning bot</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Monetag SDK -->
-<script src='//libtl.com/sdk.js'
- data-zone='10420496'
- data-sdk='show_10420496'></script>
+<script src='//libtl.com/sdk.js' data-zone='10420496' data-sdk='show_10420496'></script>
+
+<!-- Telegram WebApp -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:#eef2f7;
-}
-.page{display:none;padding:15px;padding-bottom:90px}
-.active{display:block}
-
-.card{
-  background:#fff;
-  padding:15px;
-  margin-bottom:12px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,.1);
+  font-family:system-ui;
+  background:#f2f3f5;
 }
 
-.big{
-  font-size:19px;
-  font-weight:bold;
-  margin-bottom:6px;
-}
-
-.progress{
-  font-size:16px;
-  color:#ff5722;
-  font-weight:bold;
-  margin-top:8px;
-}
-
-.btn{
-  width:100%;
-  padding:15px;
-  font-size:18px;
-  font-weight:bold;
+/* ===== Top Header (User Profile) ===== */
+.top-user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px;
+  background:#0f172a;
   color:#fff;
-  border:none;
-  border-radius:10px;
-  background:linear-gradient(45deg,#ff512f,#dd2476,#24c6dc,#514a9d);
+}
+.top-user img{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:2px solid #22d3ee;
+}
+.top-user .name{
+  font-size:15px;
+  font-weight:600;
 }
 
-.btn.gray{
-  background:linear-gradient(45deg,#555,#777);
+/* ===== Card ===== */
+.card{
+  margin:14px;
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+.card p{
+  margin:6px 0;
+  font-size:15px;
+}
+.red{
+  color:#e11d48;
+  font-weight:600;
 }
 
-input,select{
-  width:100%;
-  padding:11px;
-  margin-top:8px;
-  margin-bottom:8px;
-  font-size:16px;
+/* ===== Earn Button ===== */
+.earn-btn{
+  margin:14px;
+  padding:14px;
+  text-align:center;
+  color:#fff;
+  font-size:18px;
+  font-weight:700;
+  border-radius:14px;
+  background:linear-gradient(90deg,#ff416c,#3f5efb);
 }
 
-nav{
+/* ===== Bottom Menu ===== */
+.bottom-menu{
   position:fixed;
   bottom:0;
-  width:100%;
-  background:#fff;
+  left:0;
+  right:0;
   display:flex;
-  border-top:1px solid #ccc;
+  background:#0b1220;
 }
-nav button{
+.menu{
   flex:1;
-  padding:12px;
-  border:none;
-  background:#fff;
-  font-size:14px;
-  font-weight:bold;
+  text-align:center;
+  padding:10px 0;
+  color:#fff;
+  font-size:13px;
 }
-
-/* Notice */
-#notice{
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-#noticeBox{
-  background:#fff;
-  padding:20px;
-  width:90%;
-  border-radius:12px;
-}
+.menu.dashboard{background:#ef4444;}
+.menu.task{background:#3b82f6;}
+.menu.refer{background:#10b981;}
+.menu.withdraw{background:#f59e0b;}
 </style>
 </head>
 
 <body>
 
-<!-- NOTICE -->
-<div id="notice">
-  <div id="noticeBox">
-    <h3>গুরুত্বপূর্ণ তথ্য</h3>
-    <p>
-প্রতি বিজ্ঞাপনে আয়: <b>২ টাকা</b><br>
-প্রতিদিন সর্বোচ্চ ১০০টি বিজ্ঞাপন<br>
-মিনিমাম উইথড্র: ১৫০০ টাকা<br>
-উইথড্র করতে ৫ জন রেফার বাধ্যতামূলক<br><br>
-VPN ব্যবহার করবেন না
-    </p>
-    <button class="btn gray" onclick="closeNotice()">বন্ধ</button>
-  </div>
+<!-- User Header -->
+<div class="top-user">
+  <img id="userPhoto" src="https://via.placeholder.com/100">
+  <div class="name" id="userName">User</div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="dashboard" class="page active">
-  <div class="card">
-    <div class="big">বর্তমান ব্যালেন্স: ৳ <span id="balance">0</span></div>
-    <div class="big">মোট উপার্জন: ৳ <span id="earn">0</span></div>
-    <div class="big">মোট রেফার: <span id="ref">0</span> জন</div>
-    <div class="progress">
-      আজকের কাজ: <span id="taskDone">0</span> / 100 সম্পন্ন
-    </div>
-  </div>
-
-  <button class="btn" onclick="watchAd()">উপার্জন শুরু করুন</button>
+<!-- Dashboard Card -->
+<div class="card">
+  <p>বর্তমান ব্যালেন্স: ৳ 6</p>
+  <p>মোট উপার্জন: ৳ 6</p>
+  <p>মোট রেফার: 0 জন</p>
+  <p class="red">আজকের কাজ: 3 / 100 সম্পন্ন</p>
 </div>
 
-<!-- TASK -->
-<div id="task" class="page">
-  <div class="card big">আজকের টাস্ক সম্পন্ন করুন</div>
-  <button class="btn" onclick="watchAd()">এড দেখুন (+৳২)</button>
+<!-- Earn Button -->
+<div class="earn-btn" onclick="showAd()">
+  উপার্জন শুরু করুন
 </div>
 
-<!-- REFER -->
-<div id="refer" class="page">
-  <div class="card big">আপনার রেফার লিংক</div>
-
-  <div class="card">
-    <input id="refLink" value="https://t.me/Double_earning_bot" readonly>
-    <button class="btn" onclick="copyLink()">লিংক কপি করুন</button>
-  </div>
-
-  <div class="card">
-    মোট রেফার: <b><span id="ref2">0</span></b> জন
-  </div>
+<!-- Bottom Menu -->
+<div class="bottom-menu">
+  <div class="menu dashboard">ড্যাশবোর্ড</div>
+  <div class="menu task">টাস্ক</div>
+  <div class="menu refer">রেফার</div>
+  <div class="menu withdraw">উইথড্র</div>
 </div>
-
-<!-- WITHDRAW -->
-<div id="withdraw" class="page">
-  <div class="card">
-    <select>
-      <option>নগদ</option>
-      <option>বিকাশ</option>
-      <option>রকেট</option>
-    </select>
-
-    <input type="text" placeholder="নাম্বার লিখুন">
-    <input type="number" placeholder="এমাউন্ট লিখুন">
-
-    <button class="btn" onclick="withdraw()">উইথড্র করুন</button>
-  </div>
-
-  <div class="card" id="history">
-    <b>Withdraw History</b>
-  </div>
-</div>
-
-<!-- NAV -->
-<nav>
-  <button onclick="openPage('dashboard')">ড্যাশবোর্ড</button>
-  <button onclick="openPage('task')">টাস্ক</button>
-  <button onclick="openPage('refer')">রেফার</button>
-  <button onclick="openPage('withdraw')">উইথড্র</button>
-</nav>
 
 <script>
-let balance = Number(localStorage.getItem("balance")) || 0;
-let earn = Number(localStorage.getItem("earn")) || 0;
-let taskDone = Number(localStorage.getItem("taskDone")) || 0;
-let refCount = Number(localStorage.getItem("refCount")) || 0;
+let tg = window.Telegram.WebApp;
+tg.expand();
 
-const maxTask = 100;
-const perAd = 2; // ⭐ প্রতি এডে ২ টাকা
-
-updateUI();
-
-function openPage(id){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-function watchAd(){
-  if(taskDone >= maxTask){
-    alert("আজকের ১০০টি কাজ শেষ!");
-    return;
+let user = tg.initDataUnsafe.user;
+if(user){
+  document.getElementById("userName").innerText =
+    user.username ? "@"+user.username : user.first_name;
+  if(user.photo_url){
+    document.getElementById("userPhoto").src = user.photo_url;
   }
-
-  show_10420496();
-
-  balance += perAd;
-  earn += perAd;
-  taskDone++;
-
-  save();
-  updateUI();
 }
 
-function withdraw(){
-  if(balance < 1500){
-    alert("মিনিমাম উইথড্র ১৫০০ টাকা");
-    return;
+// Monetag Ad
+function showAd(){
+  if(typeof show_10420496 === "function"){
+    show_10420496();
+  }else{
+    alert("Ad loading...");
   }
-  if(refCount < 5){
-    alert("উইথড্র করতে মিনিমাম ৫ জন রেফার লাগবে");
-    return;
-  }
-
-  document.getElementById("history").innerHTML +=
-    "<div>৳ "+balance+" Withdraw Request Submitted</div>";
-
-  balance = 0;
-  save();
-  updateUI();
-  alert("উইথড্র রিকোয়েস্ট পাঠানো হয়েছে");
-}
-
-function save(){
-  localStorage.setItem("balance",balance);
-  localStorage.setItem("earn",earn);
-  localStorage.setItem("taskDone",taskDone);
-  localStorage.setItem("refCount",refCount);
-}
-
-function updateUI(){
-  document.getElementById("balance").innerText = balance;
-  document.getElementById("earn").innerText = earn;
-  document.getElementById("taskDone").innerText = taskDone;
-  document.getElementById("ref").innerText = refCount;
-  document.getElementById("ref2").innerText = refCount;
-}
-
-function copyLink(){
-  let link = document.getElementById("refLink");
-  link.select();
-  document.execCommand("copy");
-  alert("রেফার লিংক কপি হয়েছে");
-}
-
-function closeNotice(){
-  document.getElementById("notice").style.display="none";
 }
 </script>
 
