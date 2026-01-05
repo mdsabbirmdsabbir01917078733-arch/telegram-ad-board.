@@ -1,1 +1,160 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>BD Earn Board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Telegram WebApp SDK -->
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<!-- ✅ Monetag SDK (তোমার দেওয়া) -->
+<script src='//libtl.com/sdk.js'
+        data-zone='10407136'
+        data-sdk='show_10407136'></script>
+
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#0f172a;
+  color:#fff;
+}
+.app{
+  padding:20px;
+  text-align:center;
+}
+h2{
+  color:#22c55e;
+}
+.balance{
+  background:#020617;
+  padding:15px;
+  border-radius:12px;
+  font-size:18px;
+  margin:15px 0;
+}
+.earn-btn{
+  width:100%;
+  padding:15px;
+  background:#38bdf8;
+  border:none;
+  border-radius:15px;
+  font-size:18px;
+  font-weight:bold;
+}
+.menu{
+  margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+.menu button{
+  padding:12px;
+  background:#1e293b;
+  border:none;
+  border-radius:12px;
+  color:white;
+  font-size:15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <h2>📺 এড দেখুন, উপার্জন করুন</h2>
+
+  <div class="balance">
+    💰 ব্যালেন্স: <span id="balance">0</span> ৳
+  </div>
+
+  <button class="earn-btn" onclick="showAd()">▶️ এড দেখুন</button>
+
+  <div class="menu">
+    <button onclick="withdraw()">💳 উইথড্র</button>
+    <button onclick="refer()">🤝 রেফার</button>
+    <button onclick="profile()">👤 প্রোফাইল</button>
+  </div>
+
+</div>
+
+<script>
+/* =========================
+   TELEGRAM WEB APP
+========================= */
+let tg = window.Telegram.WebApp;
+tg.expand();
+
+/* =========================
+   USER DATA (ডেমো)
+========================= */
+let balance = 0;
+
+/* =========================
+   EARN (MONETAG AD)
+========================= */
+function showAd(){
+  if (typeof show_10407136 === "function") {
+    show_10407136(); // Monetag Ad
+  }
+
+  balance += 2; // প্রতি এডে ২ টাকা
+  document.getElementById("balance").innerText = balance;
+
+  tg.sendData(JSON.stringify({
+    type: "earn",
+    amount: 2
+  }));
+
+  alert("✅ এড দেখা শেষ! ২৳ যোগ হয়েছে");
+}
+
+/* =========================
+   WITHDRAW (BD PAYMENT)
+========================= */
+function withdraw(){
+  if(balance < 100){
+    alert("❌ মিনিমাম ১০০৳ হলে উইথড্র করা যাবে");
+    return;
+  }
+
+  let method = prompt("💳 পেমেন্ট মেথড লিখুন:\n bKash / Nagad / Rocket");
+  let number = prompt("📱 মোবাইল নাম্বার লিখুন (01XXXXXXXXX)");
+  let amount = prompt("💰 কত টাকা উইথড্র করবেন?");
+
+  if(!method || !number || !amount){
+    alert("❌ সব তথ্য দিতে হবে");
+    return;
+  }
+
+  tg.sendData(JSON.stringify({
+    type: "withdraw_request",
+    method: method,
+    number: number,
+    amount: amount
+  }));
+
+  alert("⏳ আপনার উইথড্র রিকুয়েস্ট পাঠানো হয়েছে");
+}
+
+/* =========================
+   REFER
+========================= */
+function refer(){
+  let link = "https://t.me/আপনার_BOT_USERNAME?start=ref";
+  alert("🤝 আপনার রেফার লিংক:\n" + link);
+}
+
+/* =========================
+   PROFILE
+========================= */
+function profile(){
+  alert("👤 আপনার ব্যালেন্স: " + balance + "৳");
+}
+</script>
+
+</body>
+</html>
