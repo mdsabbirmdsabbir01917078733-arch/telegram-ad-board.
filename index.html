@@ -13,33 +13,56 @@
 <style>
 body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background:#f2f2f2;
+  font-family:Arial, sans-serif;
+  background:#eef2f7;
 }
-.page{display:none;padding:15px;padding-bottom:80px}
+.page{display:none;padding:15px;padding-bottom:90px}
 .active{display:block}
+
 .card{
   background:#fff;
   padding:15px;
-  margin-bottom:10px;
-  border-radius:8px;
+  margin-bottom:12px;
+  border-radius:12px;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
+
+.big{
+  font-size:19px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.progress{
+  font-size:16px;
+  color:#ff5722;
+  font-weight:bold;
+  margin-top:8px;
+}
+
 .btn{
   width:100%;
-  padding:12px;
-  background:#0a8cff;
+  padding:15px;
+  font-size:18px;
+  font-weight:bold;
   color:#fff;
   border:none;
-  border-radius:6px;
-  font-size:16px;
+  border-radius:10px;
+  background:linear-gradient(45deg,#ff512f,#dd2476,#24c6dc,#514a9d);
 }
-.btn.gray{background:#555}
+
+.btn.gray{
+  background:linear-gradient(45deg,#555,#777);
+}
+
 input,select{
   width:100%;
-  padding:10px;
+  padding:11px;
   margin-top:8px;
   margin-bottom:8px;
+  font-size:16px;
 }
+
 nav{
   position:fixed;
   bottom:0;
@@ -50,18 +73,19 @@ nav{
 }
 nav button{
   flex:1;
-  padding:10px;
+  padding:12px;
   border:none;
   background:#fff;
+  font-size:14px;
+  font-weight:bold;
 }
-nav button:hover{background:#eee}
 
 /* Notice */
 #notice{
   position:fixed;
   top:0;left:0;
   width:100%;height:100%;
-  background:rgba(0,0,0,0.6);
+  background:rgba(0,0,0,.6);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -70,9 +94,7 @@ nav button:hover{background:#eee}
   background:#fff;
   padding:20px;
   width:90%;
-  max-height:90%;
-  overflow:auto;
-  border-radius:8px;
+  border-radius:12px;
 }
 </style>
 </head>
@@ -84,20 +106,11 @@ nav button:hover{background:#eee}
   <div id="noticeBox">
     <h3>গুরুত্বপূর্ণ তথ্য</h3>
     <p>
-আসসালামু আলাইকুম, সততার সাথে পেমেন্ট করছি।  
-নিয়ম মেনে কাজ করলে ১০০% পেমেন্ট পাবেন ইনশাল্লাহ।<br><br>
-
-জয়েন বোনাস ৫০ টাকা<br>
-রেফারেল বোনাস ৭৫ টাকা<br>
-প্রতিদিন বিজ্ঞাপন দেখতে পারবেন ১০০ টা<br>
-প্রতি বিজ্ঞাপনে ১০ টাকা<br>
-এই সাইটে কোন ইনভেস্ট করা লাগবে না, সম্পূর্ণ ফ্রিতে ইনকাম করতে পারবেন।<br><br>
-
-১০০% পেমেন্ট গ্যারান্টি<br>
-বিকাশ, নগদ, রকেট<br><br>
-
-কাজ করার সময় কোন ধরনের VPN চালু রেখে কাজ করবেন না।  
-নিয়ম মেনে কাজ করুন, ১০০% পেমেন্ট পাবেন ইনশাল্লাহ।
+প্রতি বিজ্ঞাপনে আয়: <b>২ টাকা</b><br>
+প্রতিদিন সর্বোচ্চ ১০০টি বিজ্ঞাপন<br>
+মিনিমাম উইথড্র: ১৫০০ টাকা<br>
+উইথড্র করতে ৫ জন রেফার বাধ্যতামূলক<br><br>
+VPN ব্যবহার করবেন না
     </p>
     <button class="btn gray" onclick="closeNotice()">বন্ধ</button>
   </div>
@@ -106,31 +119,26 @@ nav button:hover{background:#eee}
 <!-- DASHBOARD -->
 <div id="dashboard" class="page active">
   <div class="card">
-    <b>বর্তমান ব্যালেন্স:</b> ৳ 0<br>
-    <b>মোট রেফার:</b> 0 জন<br>
-    <b>মোট উপার্জন:</b> ৳ 0
+    <div class="big">বর্তমান ব্যালেন্স: ৳ <span id="balance">0</span></div>
+    <div class="big">মোট উপার্জন: ৳ <span id="earn">0</span></div>
+    <div class="big">মোট রেফার: <span id="ref">0</span> জন</div>
+    <div class="progress">
+      আজকের কাজ: <span id="taskDone">0</span> / 100 সম্পন্ন
+    </div>
   </div>
 
-  <div class="card">
-    প্রতিদিন সর্বোচ্চ <b>১০০টি বিজ্ঞাপন</b> দেখতে পারবেন
-  </div>
-
-  <button class="btn" onclick="show_10420496()">উপার্জন শুরু করুন</button>
+  <button class="btn" onclick="watchAd()">উপার্জন শুরু করুন</button>
 </div>
 
 <!-- TASK -->
 <div id="task" class="page">
-  <div class="card">
-    টাস্ক সম্পন্ন করতে ক্লিক করুন
-  </div>
-  <button class="btn" onclick="show_10420496()">এড দেখুন</button>
+  <div class="card big">আজকের টাস্ক সম্পন্ন করুন</div>
+  <button class="btn" onclick="watchAd()">এড দেখুন (+৳২)</button>
 </div>
 
 <!-- REFER -->
 <div id="refer" class="page">
-  <div class="card">
-    <b>আপনার রেফার</b>
-  </div>
+  <div class="card big">আপনার রেফার লিংক</div>
 
   <div class="card">
     <input id="refLink" value="https://t.me/Double_earning_bot" readonly>
@@ -138,8 +146,7 @@ nav button:hover{background:#eee}
   </div>
 
   <div class="card">
-    মোট রেফার করেছে: 0 জন<br>
-    রেফার বোনাস পেয়েছেন: ৳ 0
+    মোট রেফার: <b><span id="ref2">0</span></b> জন
   </div>
 </div>
 
@@ -155,11 +162,11 @@ nav button:hover{background:#eee}
     <input type="text" placeholder="নাম্বার লিখুন">
     <input type="number" placeholder="এমাউন্ট লিখুন">
 
-    <button class="btn" onclick="withdrawSuccess()">উইথড্র করুন</button>
+    <button class="btn" onclick="withdraw()">উইথড্র করুন</button>
   </div>
 
   <div class="card" id="history">
-    <b>Withdraw History</b><br>
+    <b>Withdraw History</b>
   </div>
 </div>
 
@@ -172,9 +179,69 @@ nav button:hover{background:#eee}
 </nav>
 
 <script>
+let balance = Number(localStorage.getItem("balance")) || 0;
+let earn = Number(localStorage.getItem("earn")) || 0;
+let taskDone = Number(localStorage.getItem("taskDone")) || 0;
+let refCount = Number(localStorage.getItem("refCount")) || 0;
+
+const maxTask = 100;
+const perAd = 2; // ⭐ প্রতি এডে ২ টাকা
+
+updateUI();
+
 function openPage(id){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+}
+
+function watchAd(){
+  if(taskDone >= maxTask){
+    alert("আজকের ১০০টি কাজ শেষ!");
+    return;
+  }
+
+  show_10420496();
+
+  balance += perAd;
+  earn += perAd;
+  taskDone++;
+
+  save();
+  updateUI();
+}
+
+function withdraw(){
+  if(balance < 1500){
+    alert("মিনিমাম উইথড্র ১৫০০ টাকা");
+    return;
+  }
+  if(refCount < 5){
+    alert("উইথড্র করতে মিনিমাম ৫ জন রেফার লাগবে");
+    return;
+  }
+
+  document.getElementById("history").innerHTML +=
+    "<div>৳ "+balance+" Withdraw Request Submitted</div>";
+
+  balance = 0;
+  save();
+  updateUI();
+  alert("উইথড্র রিকোয়েস্ট পাঠানো হয়েছে");
+}
+
+function save(){
+  localStorage.setItem("balance",balance);
+  localStorage.setItem("earn",earn);
+  localStorage.setItem("taskDone",taskDone);
+  localStorage.setItem("refCount",refCount);
+}
+
+function updateUI(){
+  document.getElementById("balance").innerText = balance;
+  document.getElementById("earn").innerText = earn;
+  document.getElementById("taskDone").innerText = taskDone;
+  document.getElementById("ref").innerText = refCount;
+  document.getElementById("ref2").innerText = refCount;
 }
 
 function copyLink(){
@@ -182,12 +249,6 @@ function copyLink(){
   link.select();
   document.execCommand("copy");
   alert("রেফার লিংক কপি হয়েছে");
-}
-
-function withdrawSuccess(){
-  document.getElementById("history").innerHTML +=
-    "<div>৳ Withdraw Success</div>";
-  alert("Withdraw Success");
 }
 
 function closeNotice(){
