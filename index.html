@@ -1,116 +1,107 @@
-<!DOCTYPE html><html lang="bn">
+<!DOCTYPE html>
+<html lang="bn">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Free Fire Gaming Panel</title>
-  <style>
-    :root{
-      --bg:#0b0f1a; --card:#121a2b; --accent:#6cff00; --accent2:#00c2ff; --text:#e8ecf3; --muted:#9aa4b2;
-    }
-    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;}
-    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#14224a,transparent),var(--bg);color:var(--text)}header{padding:18px 16px;text-align:center;border-bottom:1px solid #1f2a4d}
-header h1{margin:0;font-size:1.3rem}
-header p{margin:6px 0 0;color:var(--muted);font-size:.85rem}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Earn Dashboard</title>
 
-.wrap{max-width:1100px;margin:0 auto;padding:16px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
-.stat{background:linear-gradient(180deg,#141f3d,#0f162a);border:1px solid #1f2a4d;border-radius:16px;padding:14px}
-.stat b{font-size:1.1rem}
-.stat span{display:block;color:var(--muted);font-size:.8rem}
+<!-- MONETAG SDK (YOUR PROVIDED ONE) -->
+<script src="//libtl.com/sdk.js" data-zone="10420496" data-sdk="show_10420496"></script>
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
-.card{background:linear-gradient(180deg,#141f3d,#0f162a);border:1px solid #1f2a4d;border-radius:18px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.card h3{margin:0 0 10px;font-size:1rem}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0c2440;border:1px solid #1f4f7a;color:#bfe9ff;font-size:.75rem;margin-bottom:6px}
-
-.btns{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.btn{padding:12px;border-radius:14px;border:1px solid #1e3c6b;background:#0d1c36;color:#dff4ff;cursor:pointer}
-.btn.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#04110f;border:none}
-
-ul{padding-left:18px;margin:8px 0}
-li{font-size:.85rem;color:#d6e2ff;margin:6px 0}
-
-footer{padding:18px 16px;text-align:center;color:var(--muted);font-size:.8rem}
-
-  </style>
+<style>
+body{margin:0;font-family:Arial;background:#f2f3f7}
+.header{
+background:linear-gradient(135deg,#6a5cff,#8f3cff);
+color:#fff;padding:15px;display:flex;align-items:center
+}
+.header img{width:50px;height:50px;border-radius:50%;margin-right:12px}
+.card{background:#fff;margin:15px;padding:15px;border-radius:12px}
+.stats{display:flex;justify-content:space-between;text-align:center}
+.stats div{width:33%}
+.earn-btn{
+width:100%;padding:15px;
+background:linear-gradient(135deg,#4facfe,#6a11cb);
+border:none;color:#fff;font-size:18px;border-radius:12px
+}
+.progress{height:10px;background:#ddd;border-radius:10px;overflow:hidden}
+.progress div{height:100%;background:#2ecc71}
+.bottom{
+position:fixed;bottom:0;left:0;right:0;
+background:#fff;display:flex;justify-content:space-around;
+border-top:1px solid #ccc
+}
+.bottom button{
+flex:1;padding:12px;border:none;background:none;font-size:14px
+}
+.active{color:#6a5cff;font-weight:bold}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>🔥 Free Fire Gaming Panel</h1>
-    <p>Free Fire UI • Tips & Stats Only</p>
-  </header>  <main class="wrap">
-    <!-- Top Stats -->
-    <section class="stats">
-      <div class="stat"><b>1,250</b><span>Total Coins</span></div>
-      <div class="stat"><b>72%</b><span>FF Headshot Rate</span></div>
-      <div class="stat"><b>18</b><span>FF Matches</span></div>
-      <div class="stat"><b>Heroic</b><span>FF Rank</span></div>
-    </section><!-- Panels -->
-<section class="grid">
-  <!-- Headshot Panel -->
-  <div class="card">
-    <span class="badge">Headshot</span>
-    <h3>FF Headshot Panel</h3>
-    <ul>
-      <li>General Sensitivity: <b>90</b></li>
-      <li>Red Dot: <b>88</b></li>
-      <li>2x Scope: <b>82</b></li>
-      <li>4x Scope: <b>76</b></li>
-      <li>AWM Scope: <b>58</b></li>
-    </ul>
-    <ul>
-      <li>Fire করার সময় হালকা <b>drag up</b></li>
-      <li>Running spray এড়িয়ে চল</li>
-      <li>Mid-range এ Red Dot ব্যবহার</li>
-      <li>Daily practice: 10–15 min</li>
-    </ul>
-  </div>
 
-  <div class="card">
-    <span class="badge">Quick Play</span>
-    <h3>Free Fire Modes</h3>
-    <div class="btns">
-      <button class="btn primary">BR – Classic</button>
-      <button class="btn">Clash Squad</button>
-      <button class="btn">Ranked Match</button>
-      <button class="btn">Training Ground</button>
-    </div>
-  </div>
+<div class="header">
+<img src="https://i.pravatar.cc/150">
+<div>
+<b>User Name</b><br>
+ID: 123456
+</div>
+</div>
 
-  <div class="card">
-    <span class="badge">Tips</span>
-    <h3>Free Fire Pro Tips</h3>
-    <ul>
-      <li>Always aim at head level (drag shot)</li>
-      <li>Use gloo wall before spray</li>
-      <li>Short burst for AR/SMG</li>
-      <li>Practice 10–15 min daily</li>
-    </ul>
-  </div>
+<div class="card stats">
+<div>
+বর্তমান ব্যালেন্স<br><b id="balance">৳ 0</b>
+</div>
+<div>
+রেফার<br><b>0</b>
+</div>
+<div>
+মোট আয়<br><b>৳ 0</b>
+</div>
+</div>
 
-  <div class="card">
-    <span class="badge">Settings</span>
-    <h3>FF Recommended Setup</h3>
-    <ul>
-      <li>Graphics: Smooth</li>
-      <li>High FPS: ON</li>
-      <li>Sensitivity: High (Custom)</li>
-    </ul>
-  </div>
+<div class="card">
+<b>এড দেখে উপার্জন করুন</b><br><br>
+<div class="progress">
+<div id="bar" style="width:0%"></div>
+</div>
+<br>
+আজ দেখেছেন: <span id="count">0</span> / 100<br><br>
 
-  <div class="card">
-    <span class="badge">Profile</span>
-    <h3>Free Fire Player</h3>
-    <ul>
-      <li>Name: FF_Player</li>
-      <li>Server: Bangladesh</li>
-      <li>Win Rate: 54%</li>
-    </ul>
-  </div>
-</section>
+<button class="earn-btn" id="earnBtn">উপার্জন করুন</button>
+</div>
 
-  </main>  <footer>
-    © Free Fire Panel UI • Demo Design
-  </footer>
+<div class="bottom">
+<button class="active">Dashboard</button>
+<button>Task</button>
+<button>Refer</button>
+<button>Withdraw</button>
+</div>
+
+<script>
+let ads = 0;
+let balance = 0;
+const limit = 100;
+
+document.getElementById("earnBtn").addEventListener("click", function(){
+
+if(ads >= limit){
+alert("আজকের লিমিট শেষ");
+return;
+}
+
+if(typeof show_10420496 === "function"){
+show_10420496();   // 🔥 MONETAG AD CALL (USER CLICK)
+}
+
+ads++;
+balance += 2;
+
+document.getElementById("count").innerText = ads;
+document.getElementById("balance").innerText = "৳ " + balance;
+document.getElementById("bar").style.width = (ads/limit*100)+"%";
+
+});
+</script>
+
 </body>
 </html>
