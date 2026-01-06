@@ -1,238 +1,116 @@
-==================== index.html ====================
-<!DOCTYPE html>
-<html lang="bn">
+<!DOCTYPE html><html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Earn Bot</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Free Fire Gaming Panel</title>
+  <style>
+    :root{
+      --bg:#0b0f1a; --card:#121a2b; --accent:#6cff00; --accent2:#00c2ff; --text:#e8ecf3; --muted:#9aa4b2;
+    }
+    *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;}
+    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,#14224a,transparent),var(--bg);color:var(--text)}header{padding:18px 16px;text-align:center;border-bottom:1px solid #1f2a4d}
+header h1{margin:0;font-size:1.3rem}
+header p{margin:6px 0 0;color:var(--muted);font-size:.85rem}
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script src='//libtl.com/sdk.js' data-zone='10420496' data-sdk='show_10420496'></script>
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat{background:linear-gradient(180deg,#141f3d,#0f162a);border:1px solid #1f2a4d;border-radius:16px;padding:14px}
+.stat b{font-size:1.1rem}
+.stat span{display:block;color:var(--muted);font-size:.8rem}
 
-<style>
-body{margin:0;font-family:sans-serif;background:#f1f5f9}
-.header{background:#0f172a;color:#fff;padding:15px}
-.card{background:#fff;margin:12px;padding:15px;border-radius:15px}
-.btn{background:#22c55e;color:#fff;padding:14px;text-align:center;
-border-radius:12px;font-weight:bold}
-.menu{position:fixed;bottom:0;left:0;right:0;display:flex;
-background:#fff;border-top:1px solid #ddd}
-.menu div{flex:1;padding:12px;text-align:center}
-.hidden{display:none}
-</style>
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:14px}
+.card{background:linear-gradient(180deg,#141f3d,#0f162a);border:1px solid #1f2a4d;border-radius:18px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.card h3{margin:0 0 10px;font-size:1rem}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#0c2440;border:1px solid #1f4f7a;color:#bfe9ff;font-size:.75rem;margin-bottom:6px}
+
+.btns{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.btn{padding:12px;border-radius:14px;border:1px solid #1e3c6b;background:#0d1c36;color:#dff4ff;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));color:#04110f;border:none}
+
+ul{padding-left:18px;margin:8px 0}
+li{font-size:.85rem;color:#d6e2ff;margin:6px 0}
+
+footer{padding:18px 16px;text-align:center;color:var(--muted);font-size:.8rem}
+
+  </style>
 </head>
-
 <body>
-<div class="header">
-<b id="name"></b><br>
-ID: <span id="uid"></span>
-</div>
+  <header>
+    <h1>🔥 Free Fire Gaming Panel</h1>
+    <p>Free Fire UI • Tips & Stats Only</p>
+  </header>  <main class="wrap">
+    <!-- Top Stats -->
+    <section class="stats">
+      <div class="stat"><b>1,250</b><span>Total Coins</span></div>
+      <div class="stat"><b>72%</b><span>FF Headshot Rate</span></div>
+      <div class="stat"><b>18</b><span>FF Matches</span></div>
+      <div class="stat"><b>Heroic</b><span>FF Rank</span></div>
+    </section><!-- Panels -->
+<section class="grid">
+  <!-- Headshot Panel -->
+  <div class="card">
+    <span class="badge">Headshot</span>
+    <h3>FF Headshot Panel</h3>
+    <ul>
+      <li>General Sensitivity: <b>90</b></li>
+      <li>Red Dot: <b>88</b></li>
+      <li>2x Scope: <b>82</b></li>
+      <li>4x Scope: <b>76</b></li>
+      <li>AWM Scope: <b>58</b></li>
+    </ul>
+    <ul>
+      <li>Fire করার সময় হালকা <b>drag up</b></li>
+      <li>Running spray এড়িয়ে চল</li>
+      <li>Mid-range এ Red Dot ব্যবহার</li>
+      <li>Daily practice: 10–15 min</li>
+    </ul>
+  </div>
 
-<div id="dash" class="card">
-ব্যালেন্স: ৳ <b id="balance">0</b><br>
-রেফার: <b id="refer">0</b><br>
-আজকের এড: <b id="ads">0</b>/100
-<br><br>
-<div class="btn" onclick="showAd()">এড দেখুন</div>
-</div>
+  <div class="card">
+    <span class="badge">Quick Play</span>
+    <h3>Free Fire Modes</h3>
+    <div class="btns">
+      <button class="btn primary">BR – Classic</button>
+      <button class="btn">Clash Squad</button>
+      <button class="btn">Ranked Match</button>
+      <button class="btn">Training Ground</button>
+    </div>
+  </div>
 
-<div id="withdraw" class="card hidden">
-<input id="method" placeholder="Bkash/Nagad" style="width:100%;padding:10px"><br><br>
-<input id="number" placeholder="নাম্বার" style="width:100%;padding:10px"><br><br>
-<input id="amount" placeholder="এমাউন্ট" style="width:100%;padding:10px"><br><br>
-<div class="btn" onclick="withdrawReq()">উইথড্র</div>
-<p id="msg"></p>
-</div>
+  <div class="card">
+    <span class="badge">Tips</span>
+    <h3>Free Fire Pro Tips</h3>
+    <ul>
+      <li>Always aim at head level (drag shot)</li>
+      <li>Use gloo wall before spray</li>
+      <li>Short burst for AR/SMG</li>
+      <li>Practice 10–15 min daily</li>
+    </ul>
+  </div>
 
-<div class="menu">
-<div onclick="openTab('dash')">ড্যাশবোর্ড</div>
-<div onclick="openTab('withdraw')">উইথড্র</div>
-</div>
+  <div class="card">
+    <span class="badge">Settings</span>
+    <h3>FF Recommended Setup</h3>
+    <ul>
+      <li>Graphics: Smooth</li>
+      <li>High FPS: ON</li>
+      <li>Sensitivity: High (Custom)</li>
+    </ul>
+  </div>
 
-<script>
-let tg=Telegram.WebApp;tg.expand();
-let u=tg.initDataUnsafe.user;
-uid.innerText=u.id;
-name.innerText=u.username||u.first_name;
+  <div class="card">
+    <span class="badge">Profile</span>
+    <h3>Free Fire Player</h3>
+    <ul>
+      <li>Name: FF_Player</li>
+      <li>Server: Bangladesh</li>
+      <li>Win Rate: 54%</li>
+    </ul>
+  </div>
+</section>
 
-window.monetag=window.monetag||{};
-window.monetag.subid=u.id.toString();
-
-fetch("api.php?uid="+u.id)
-.then(r=>r.json()).then(d=>{
- balance.innerText=d.balance;
- refer.innerText=d.refer;
- ads.innerText=d.ads;
-});
-
-function showAd(){
- if(typeof show_10420496==="function") show_10420496();
-}
-
-function withdrawReq(){
- let f=new FormData();
- f.append("uid",u.id);
- f.append("method",method.value);
- f.append("number",number.value);
- f.append("amount",amount.value);
- fetch("withdraw.php",{method:"POST",body:f})
- .then(r=>r.text()).then(t=>msg.innerText=t);
-}
-
-function openTab(id){
- dash.classList.add("hidden");
- withdraw.classList.add("hidden");
- document.getElementById(id).classList.remove("hidden");
-}
-</script>
+  </main>  <footer>
+    © Free Fire Panel UI • Demo Design
+  </footer>
 </body>
 </html>
-
-
-==================== api.php ====================
-<?php
-$db=new mysqli("localhost","DB_USER","DB_PASS","DB_NAME");
-$uid=intval($_GET['uid']);
-$today=date("Y-m-d");
-
-$db->query("INSERT IGNORE INTO users (telegram_id) VALUES ($uid)");
-
-$u=$db->query("SELECT balance,refer_count FROM users WHERE telegram_id=$uid")->fetch_assoc();
-$a=$db->query("SELECT COUNT(*) c FROM ad_logs WHERE telegram_id=$uid AND ad_date='$today'")->fetch_assoc();
-
-echo json_encode([
- "balance"=>$u['balance'],
- "refer"=>$u['refer_count'],
- "ads"=>$a['c']
-]);
-
-
-==================== postback.php ====================
-<?php
-$db=new mysqli("localhost","DB_USER","DB_PASS","DB_NAME");
-$uid=intval($_GET['subid']??0);
-$amount=floatval($_GET['amount']??0);
-if($uid<=0||$amount<=0)exit;
-
-$today=date("Y-m-d");
-$c=$db->query("SELECT COUNT(*) c FROM ad_logs WHERE telegram_id=$uid AND ad_date='$today'")->fetch_assoc();
-if($c['c']>=100)exit;
-
-$db->query("INSERT INTO ad_logs (telegram_id,ad_date) VALUES ($uid,'$today')");
-$db->query("INSERT IGNORE INTO users (telegram_id) VALUES ($uid)");
-$db->query("UPDATE users SET balance=balance+$amount,total_earn=total_earn+$amount WHERE telegram_id=$uid");
-echo "OK";
-
-
-==================== withdraw.php ====================
-<?php
-$db=new mysqli("localhost","DB_USER","DB_PASS","DB_NAME");
-$uid=intval($_POST['uid']);
-$amount=floatval($_POST['amount']);
-
-$u=$db->query("SELECT balance,refer_count FROM users WHERE telegram_id=$uid")->fetch_assoc();
-if($u['balance']<1500)exit("❌ মিনিমাম ১৫০০ টাকা");
-if($u['refer_count']<5)exit("❌ মিনিমাম ৫ রেফার");
-
-$db->query("INSERT INTO withdraws (telegram_id,method,number,amount)
-VALUES ($uid,'{$_POST['method']}','{$_POST['number']}',$amount)");
-$db->query("UPDATE users SET balance=balance-$amount WHERE telegram_id=$uid");
-echo "✅ উইথড্র রিকুয়েস্ট পাঠানো হয়েছে";
-
-
-==================== bot.php ====================
-<?php
-$token="8061432379:AAHuwEJCYafxuR8ju4MkaEIP4inOyuGnpk0";
-$api="https://api.telegram.org/bot$token/";
-$db=new mysqli("localhost","DB_USER","DB_PASS","DB_NAME");
-
-$u=json_decode(file_get_contents("php://input"),true);
-$m=$u['message']??null;
-if(!$m)exit;
-
-$uid=$m['chat']['id'];
-$text=$m['text']??"";
-
-$db->query("INSERT IGNORE INTO users (telegram_id) VALUES ($uid)");
-
-if(strpos($text,"/start")===0){
- $p=explode(" ",$text);
- if(isset($p[1])){
-  $db->query("UPDATE users SET referred_by={$p[1]} WHERE telegram_id=$uid AND referred_by IS NULL");
-  $db->query("UPDATE users SET refer_count=refer_count+1 WHERE telegram_id={$p[1]}");
- }
- file_get_contents($api."sendMessage?chat_id=$uid&text=🎉 Earn Bot Ready");
-}
-
-
-==================== db.sql ====================
-CREATE TABLE users (
- id INT AUTO_INCREMENT PRIMARY KEY,
- telegram_id BIGINT UNIQUE,
- balance DOUBLE DEFAULT 0,
- total_earn DOUBLE DEFAULT 0,
- refer_count INT DEFAULT 0,
- referred_by BIGINT DEFAULT NULL
-);
-
-CREATE TABLE ad_logs (
- id INT AUTO_INCREMENT PRIMARY KEY,
- telegram_id BIGINT,
- ad_date DATE
-);
-
-CREATE TABLE withdraws (
- id INT AUTO_INCREMENT PRIMARY KEY,
- telegram_id BIGINT,
- method VARCHAR(20),
- number VARCHAR(20),
- amount DOUBLE,
- status VARCHAR(20) DEFAULT 'PENDING',
- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
-==================== admin/config.php ====================
-<?php
-session_start();
-$db=new mysqli("localhost","DB_USER","DB_PASS","DB_NAME");
-$ADMIN_USER="admin";
-$ADMIN_PASS="123456";
-
-
-==================== admin/login.php ====================
-<?php require "config.php"; ?>
-<form method="post">
-<input name="user">
-<input name="pass" type="password">
-<button>Login</button>
-<?php
-if($_POST){
- if($_POST['user']==$ADMIN_USER && $_POST['pass']==$ADMIN_PASS){
-  $_SESSION['admin']=1; header("Location: dashboard.php");
- } else echo "Wrong";
-}
-?>
-</form>
-
-
-==================== admin/dashboard.php ====================
-<?php require "config.php"; if(!isset($_SESSION['admin']))exit; ?>
-<a href="users.php">Users</a> |
-<a href="withdraws.php">Withdraws</a>
-
-
-==================== admin/users.php ====================
-<?php require "config.php";
-$r=$db->query("SELECT telegram_id,balance FROM users");
-while($u=$r->fetch_assoc()){
- echo $u['telegram_id']." | ".$u['balance']."<br>";
-}
-
-
-==================== admin/withdraws.php ====================
-<?php require "config.php";
-$r=$db->query("SELECT * FROM withdraws");
-while($w=$r->fetch_assoc()){
- echo $w['telegram_id']." | ".$w['amount']." | ".$w['status']."<br>";
-}
