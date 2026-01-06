@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Earn App</title>
+<title>Double Earning Bot</title>
 
 <!-- MONETAG SDK -->
 <script src="//libtl.com/sdk.js" data-zone="10420496" data-sdk="show_10420496"></script>
@@ -11,50 +11,19 @@
 <style>
 body{margin:0;font-family:Arial;background:#f2f3f7}
 .hidden{display:none}
-
-/* Header */
-.header{
-background:linear-gradient(135deg,#6a5cff,#8f3cff);
-color:#fff;padding:15px;display:flex;align-items:center
-}
-.header img{width:50px;height:50px;border-radius:50%;margin-right:12px}
-
-/* Card */
+.header{background:linear-gradient(135deg,#6a5cff,#8f3cff);color:#fff;padding:15px;display:flex;align-items:center}
+.header img{width:50px;height:50px;border-radius:50%;margin-right:10px}
 .card{background:#fff;margin:15px;padding:15px;border-radius:14px}
-
-/* Stats */
 .stats{display:flex;justify-content:space-between;text-align:center}
 .stats div{width:33%}
-
-/* Button */
-.btn{
-width:100%;padding:14px;border:none;border-radius:12px;
-background:linear-gradient(135deg,#4facfe,#6a11cb);
-color:#fff;font-size:16px
-}
-
-/* Progress */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#4facfe,#6a11cb);color:#fff;font-size:16px}
 .progress{height:10px;background:#ddd;border-radius:10px;overflow:hidden}
 .progress div{height:100%;background:#2ecc71}
-
-/* Bottom Nav */
-.bottom{
-position:fixed;bottom:0;left:0;right:0;
-background:#fff;display:flex;border-top:1px solid #ccc
-}
-.bottom button{
-flex:1;padding:12px;border:none;background:none;font-size:14px
-}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #ccc}
+.bottom button{flex:1;padding:12px;border:none;background:none;font-size:14px}
 .active{color:#6a5cff;font-weight:bold}
-
-/* Modal */
-.modal{
-position:fixed;top:0;left:0;right:0;bottom:0;
-background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center
-}
-.modal-box{
-background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
-}
+.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center}
+.modal-box{background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center}
 </style>
 </head>
 
@@ -65,7 +34,7 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
   <div class="modal-box">
     <h3>নোটিশ</h3>
     <p>
-প্রতিদিন সর্বোচ্চ ১০০টি এড দেখা যাবে।<br>
+প্রতিদিন সর্বোচ্চ ১০০টি এড।<br>
 প্রতি এডে ২ টাকা।<br>
 মিনিমাম উইথড্র ১৫০০ টাকা।<br>
 পেমেন্ট ২৪–৪৮ ঘন্টার মধ্যে।
@@ -74,20 +43,17 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
   </div>
 </div>
 
-<!-- HEADER -->
 <div class="header">
 <img src="https://i.pravatar.cc/150">
-<div>
-<b>User Name</b><br>ID: 123456
-</div>
+<div><b>User Name</b><br>ID: 123456</div>
 </div>
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="page">
   <div class="card stats">
     <div>বর্তমান ব্যালেন্স<br><b id="balance">৳ 0</b></div>
-    <div>রেফার<br><b>0</b></div>
-    <div>মোট আয়<br><b id="total">৳ 0</b></div>
+    <div>রেফার<br><b id="ref">0</b></div>
+    <div>মোট উপার্জন<br><b id="total">৳ 0</b></div>
   </div>
 
   <div class="card">
@@ -102,7 +68,6 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
 <div id="task" class="page hidden">
   <div class="card">
     <h3>টাস্ক</h3>
-    <p>এড দেখে টাস্ক সম্পন্ন করুন</p>
     <button class="btn" onclick="earn()">টাস্ক শুরু করুন</button>
   </div>
 </div>
@@ -111,8 +76,9 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
 <div id="refer" class="page hidden">
   <div class="card">
     <h3>রেফার করুন</h3>
-    <input id="refLink" value="https://t.me/your_bot?start=123456" style="width:100%;padding:10px">
-    <br><br>
+    <input id="refLink" readonly
+     value="https://t.me/Double_earning_bot?start=123456"
+     style="width:100%;padding:10px"><br><br>
     <button class="btn" onclick="copyRef()">লিংক কপি করুন</button>
   </div>
 </div>
@@ -121,16 +87,13 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
 <div id="withdraw" class="page hidden">
   <div class="card">
     <h3>উইথড্র করুন</h3>
-
     <select id="method" style="width:100%;padding:10px">
       <option>নগদ</option>
       <option>বিকাশ</option>
       <option>রকেট</option>
     </select><br><br>
-
     <input id="number" placeholder="নাম্বার লিখুন" style="width:100%;padding:10px"><br><br>
     <input id="amount" placeholder="এমাউন্ট লিখুন" style="width:100%;padding:10px"><br><br>
-
     <button class="btn" onclick="withdraw()">উইথড্র করুন</button>
   </div>
 
@@ -140,7 +103,6 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
 <div class="bottom">
 <button class="active" onclick="openPage('dashboard',this)">Dashboard</button>
 <button onclick="openPage('task',this)">Task</button>
@@ -149,7 +111,18 @@ background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center
 </div>
 
 <script>
-let ads = 0, balance = 0, total = 0;
+let today = new Date().toDateString();
+
+if(localStorage.getItem("day") !== today){
+ localStorage.setItem("day", today);
+ localStorage.setItem("ads", 0);
+}
+
+let ads = Number(localStorage.getItem("ads")) || 0;
+let balance = Number(localStorage.getItem("balance")) || 0;
+let total = Number(localStorage.getItem("total")) || 0;
+
+updateUI();
 
 function closeNotice(){document.getElementById("notice").style.display="none"}
 
@@ -157,6 +130,30 @@ function earn(){
  if(ads>=100){alert("আজকের লিমিট শেষ");return;}
  if(typeof show_10420496==="function"){show_10420496();}
  ads++; balance+=2; total+=2;
+ save();
+ updateUI();
+}
+
+function withdraw(){
+ let amt = Number(document.getElementById("amount").value);
+ let num = document.getElementById("number").value;
+ if(balance<amt){alert("পর্যাপ্ত ব্যালেন্স নেই");return;}
+ balance -= amt;
+ let li=document.createElement("li");
+ li.innerText=num+" - ৳"+amt;
+ document.getElementById("history").appendChild(li);
+ save();
+ updateUI();
+ alert("উইথড্র রিকোয়েস্ট সফল");
+}
+
+function save(){
+ localStorage.setItem("ads", ads);
+ localStorage.setItem("balance", balance);
+ localStorage.setItem("total", total);
+}
+
+function updateUI(){
  document.getElementById("count").innerText=ads;
  document.getElementById("balance").innerText="৳ "+balance;
  document.getElementById("total").innerText="৳ "+total;
@@ -173,16 +170,6 @@ function openPage(id,btn){
 function copyRef(){
  navigator.clipboard.writeText(document.getElementById("refLink").value);
  alert("রেফার লিংক কপি হয়েছে");
-}
-
-function withdraw(){
- let num=document.getElementById("number").value;
- let amt=document.getElementById("amount").value;
- if(!num||!amt){alert("সব পূরণ করুন");return;}
- let li=document.createElement("li");
- li.innerText=num+" - ৳"+amt;
- document.getElementById("history").appendChild(li);
- alert("উইথড্র রিকোয়েস্ট সফল");
 }
 </script>
 
