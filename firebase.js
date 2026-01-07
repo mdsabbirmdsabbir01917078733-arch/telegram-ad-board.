@@ -1,70 +1,22 @@
-<script type="module">
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-import { ref, onValue, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-window.login = function () {
-  const email = email.value;
-  const password = password.value;
-
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      loginBox.classList.add("hidden");
-      dashboard.classList.remove("hidden");
-      loadData();
-    })
-    .catch(() => alert("Login failed"));
+// 🔴 নিজের Firebase config বসাবে
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "double-earning-bot.firebaseapp.com",
+  databaseURL: "https://double-earning-bot-default-rtdb.firebaseio.com",
+  projectId: "double-earning-bot",
+  storageBucket: "double-earning-bot.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
 };
 
-function loadData() {
-  onValue(ref(db, "users"), snap => {
-    let users = snap.val() || {};
-    totalUsers.innerText = Object.keys(users).length;
-
-    let earnings = 0;
-    Object.values(users).forEach(u => earnings += u.totalEarned || 0);
-    totalEarnings.innerText = earnings;
-  });
-
-  onValue(ref(db, "withdrawRequests"), snap => {
-    let data = snap.val() || {};
-    withdrawList.innerHTML = "";
-    let totalW = 0;
-
-    Object.entries(data).forEach(([id, w]) => {
-      totalW += w.amount || 0;
-      if (w.status === "pending") {
-        withdrawList.innerHTML += `
-          <div class="card">
-            ৳${w.amount} - ${w.method}
-            <button onclick="approve('${id}')">Approve</button>
-            <button onclick="reject('${id}')">Reject</button>
-          </div>
-        `;
-      }
-    });
-    totalWithdraw.innerText = totalW;
-  });
-
-  onValue(ref(db, "settings"), snap => {
-    const s = snap.val() || {};
-    botToken.value = s.telegramBotToken || "";
-    zoneId.value = s.monetagZoneId || "";
-    withdrawLimit.value = s.withdrawLimit || "";
-  });
-}
-
-window.saveSettings = function () {
-  update(ref(db, "settings"), {
-    telegramBotToken: botToken.value,
-    monetagZoneId: zoneId.value,
-    withdrawLimit: Number(withdrawLimit.value)
-  });
-  alert("Saved");
-};
-
-window.approve = id =>
-  update(ref(db, "withdrawRequests/" + id), { status: "approved" });
-
-window.reject = id =>
-  update(ref(db, "withdrawRequests/" + id), { status: "rejected" });
-</script>
+const app = initializeApp(firebaseConfig);
+window.auth = getAuth(app);
+window.db = getDatabase(app);
+window.ref = ref;
+window.onValue = onValue;
+window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+window.update = update;
