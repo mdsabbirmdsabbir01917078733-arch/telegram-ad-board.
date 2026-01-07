@@ -1,40 +1,49 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Double Earning Bot – Admin Panel</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
+const loginBox = document.getElementById("loginBox");
+const dashboard = document.getElementById("dashboard");
 
-<div class="container" id="loginBox">
-  <h2>🔐 Admin Login</h2>
-  <input id="email" placeholder="Admin Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
+window.login = function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-<div class="container hidden" id="dashboard">
-  <h2>📊 Admin Dashboard</h2>
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      loginBox.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      loadData();
+    })
+    .catch(() => alert("Login failed"));
+};
 
-  <div class="card">👥 Total Users: <span id="totalUsers">0</span></div>
-  <div class="card">💰 Total Earnings: ৳ <span id="totalEarnings">0</span></div>
-  <div class="card">💸 Total Withdraw: ৳ <span id="totalWithdraw">0</span></div>
+function loadData() {
+  onValue(ref(db, "users"), snap => {
+    const users = snap.val() || {};
+    document.getElementById("totalUsers").innerText = Object.keys(users).length;
 
-  <div class="card">
-    <h3>⚙️ Settings</h3>
-    <input id="botToken" placeholder="Telegram Bot Token">
-    <input id="zoneId" placeholder="Monetag Zone ID">
-    <input id="withdrawLimit" placeholder="Withdraw Limit">
-    <button onclick="saveSettings()">Save</button>
-  </div>
+    let earnings = 0;
+    Object.values(users).forEach(u => earnings += u.totalEarned || 0);
+    document.getElementById("totalEarnings").innerText = earnings;
+  });
 
-  <div class="card">
-    <h3>⏳ Withdraw Requests</h3>
-    <div id="withdrawList"></div>
-  </div>
-</div>
+  onValue(ref(db, "withdrawRequests"), snap => {
+    const data = snap.val() || {};
+    const list = document.getElementById("withdrawList");
+    list.innerHTML = "";
 
-<script src="firebase.js"></script>
-<script src="admin.js"></script>
-</body>
-</html>
+    Object.entries(data).forEach(([id, w]) => {
+      if (w.status === "pending") {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${w.userId} - ৳${w.amount}
+          <button onclick="approve('${id}')">Approve</button>
+        `;
+        list.appendChild(li);
+      }
+    });
+  });
+}
+
+window.approve = function (id) {
+  update(ref(db, "withdrawRequests/" + id), {
+    status: "approved"
+  });
+};
