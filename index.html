@@ -1,177 +1,20 @@
-<!DOCTYPE html>
-<html lang="bn">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Double Earning Bot</title>
+<!-- firebase.js -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+  import { getDatabase } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-<!-- MONETAG SDK -->
-<script src="//libtl.com/sdk.js" data-zone="10420496" data-sdk="show_10420496"></script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyBNcV0FMuEvxgg6FFClJ5r7Xld4g3Z7x6U",
+    authDomain: "double-earning-bot.firebaseapp.com",
+    databaseURL: "https://double-earning-bot-default-rtdb.firebaseio.com",
+    projectId: "double-earning-bot",
+    storageBucket: "double-earning-bot.firebasestorage.app",
+    messagingSenderId: "155076870534",
+    appId: "1:155076870534:web:0023206fbb40f56aafac07"
+  };
 
-<style>
-body{margin:0;font-family:Arial;background:#f2f3f7}
-.hidden{display:none}
-.header{background:linear-gradient(135deg,#6a5cff,#8f3cff);color:#fff;padding:15px;display:flex;align-items:center}
-.header img{width:50px;height:50px;border-radius:50%;margin-right:10px}
-.card{background:#fff;margin:15px;padding:15px;border-radius:14px}
-.stats{display:flex;justify-content:space-between;text-align:center}
-.stats div{width:33%}
-.btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#4facfe,#6a11cb);color:#fff;font-size:16px}
-.progress{height:10px;background:#ddd;border-radius:10px;overflow:hidden}
-.progress div{height:100%;background:#2ecc71}
-.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;border-top:1px solid #ccc}
-.bottom button{flex:1;padding:12px;border:none;background:none;font-size:14px}
-.active{color:#6a5cff;font-weight:bold}
-.modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center}
-.modal-box{background:#fff;padding:20px;border-radius:14px;width:85%;text-align:center}
-</style>
-</head>
-
-<body>
-
-<!-- NOTICE -->
-<div class="modal" id="notice">
-  <div class="modal-box">
-    <h3>নোটিশ</h3>
-    <p>
-প্রতিদিন সর্বোচ্চ ১০০টি এড।<br>
-প্রতি এডে ২ টাকা।<br>
-মিনিমাম উইথড্র ১৫০০ টাকা।<br>
-পেমেন্ট ২৪–৪৮ ঘন্টার মধ্যে।
-    </p>
-    <button class="btn" onclick="closeNotice()">ওকে</button>
-  </div>
-</div>
-
-<div class="header">
-<img src="https://i.pravatar.cc/150">
-<div><b>User Name</b><br>ID: 123456</div>
-</div>
-
-<!-- DASHBOARD -->
-<div id="dashboard" class="page">
-  <div class="card stats">
-    <div>বর্তমান ব্যালেন্স<br><b id="balance">৳ 0</b></div>
-    <div>রেফার<br><b id="ref">0</b></div>
-    <div>মোট উপার্জন<br><b id="total">৳ 0</b></div>
-  </div>
-
-  <div class="card">
-    <b>এড দেখে উপার্জন করুন</b><br><br>
-    <div class="progress"><div id="bar"></div></div><br>
-    আজ দেখেছেন: <span id="count">0</span> / 100<br><br>
-    <button class="btn" onclick="earn()">উপার্জন করুন</button>
-  </div>
-</div>
-
-<!-- TASK -->
-<div id="task" class="page hidden">
-  <div class="card">
-    <h3>টাস্ক</h3>
-    <button class="btn" onclick="earn()">টাস্ক শুরু করুন</button>
-  </div>
-</div>
-
-<!-- REFER -->
-<div id="refer" class="page hidden">
-  <div class="card">
-    <h3>রেফার করুন</h3>
-    <input id="refLink" readonly
-     value="https://t.me/Double_earning_bot?start=123456"
-     style="width:100%;padding:10px"><br><br>
-    <button class="btn" onclick="copyRef()">লিংক কপি করুন</button>
-  </div>
-</div>
-
-<!-- WITHDRAW -->
-<div id="withdraw" class="page hidden">
-  <div class="card">
-    <h3>উইথড্র করুন</h3>
-    <select id="method" style="width:100%;padding:10px">
-      <option>নগদ</option>
-      <option>বিকাশ</option>
-      <option>রকেট</option>
-    </select><br><br>
-    <input id="number" placeholder="নাম্বার লিখুন" style="width:100%;padding:10px"><br><br>
-    <input id="amount" placeholder="এমাউন্ট লিখুন" style="width:100%;padding:10px"><br><br>
-    <button class="btn" onclick="withdraw()">উইথড্র করুন</button>
-  </div>
-
-  <div class="card">
-    <h4>উইথড্র হিস্টোরি</h4>
-    <ul id="history"></ul>
-  </div>
-</div>
-
-<div class="bottom">
-<button class="active" onclick="openPage('dashboard',this)">Dashboard</button>
-<button onclick="openPage('task',this)">Task</button>
-<button onclick="openPage('refer',this)">Refer</button>
-<button onclick="openPage('withdraw',this)">Withdraw</button>
-</div>
-
-<script>
-let today = new Date().toDateString();
-
-if(localStorage.getItem("day") !== today){
- localStorage.setItem("day", today);
- localStorage.setItem("ads", 0);
-}
-
-let ads = Number(localStorage.getItem("ads")) || 0;
-let balance = Number(localStorage.getItem("balance")) || 0;
-let total = Number(localStorage.getItem("total")) || 0;
-
-updateUI();
-
-function closeNotice(){document.getElementById("notice").style.display="none"}
-
-function earn(){
- if(ads>=100){alert("আজকের লিমিট শেষ");return;}
- if(typeof show_10420496==="function"){show_10420496();}
- ads++; balance+=2; total+=2;
- save();
- updateUI();
-}
-
-function withdraw(){
- let amt = Number(document.getElementById("amount").value);
- let num = document.getElementById("number").value;
- if(balance<amt){alert("পর্যাপ্ত ব্যালেন্স নেই");return;}
- balance -= amt;
- let li=document.createElement("li");
- li.innerText=num+" - ৳"+amt;
- document.getElementById("history").appendChild(li);
- save();
- updateUI();
- alert("উইথড্র রিকোয়েস্ট সফল");
-}
-
-function save(){
- localStorage.setItem("ads", ads);
- localStorage.setItem("balance", balance);
- localStorage.setItem("total", total);
-}
-
-function updateUI(){
- document.getElementById("count").innerText=ads;
- document.getElementById("balance").innerText="৳ "+balance;
- document.getElementById("total").innerText="৳ "+total;
- document.getElementById("bar").style.width=(ads)+"%";
-}
-
-function openPage(id,btn){
- document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
- document.querySelectorAll(".bottom button").forEach(b=>b.classList.remove("active"));
- btn.classList.add("active");
-}
-
-function copyRef(){
- navigator.clipboard.writeText(document.getElementById("refLink").value);
- alert("রেফার লিংক কপি হয়েছে");
-}
+  window.app = initializeApp(firebaseConfig);
+  window.auth = getAuth(app);
+  window.db = getDatabase(app);
 </script>
-
-</body>
-</html>
