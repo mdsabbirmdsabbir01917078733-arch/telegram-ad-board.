@@ -1,117 +1,56 @@
-// user/user.js
+// Telegram
+const tg = window.Telegram.WebApp;
+tg.ready();
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import {
-  getDatabase,
-  ref,
-  get,
-  set,
-  update,
-  push
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+// Firebase
+const auth = firebase.auth();
+const db = firebase.database();
 
-// 🔥 Firebase config (firebase.js থেকে same project)
-import { firebaseConfig } from "./firebase.js";
+let uid = null;
+let userRef = null;
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+// Login detect
+auth.onAuthStateChanged(user => {
+  if (user) {
+    uid = user.uid;
+    userRef = db.ref("users/" + uid);
 
-// 🆔 Temporary user id (later Telegram ID বসবে)
-const userId = "demo_user_001";
-
-// 📌 HTML Elements
-const balanceEl = document.getElementById("userBalance");
-const refEl = document.getElementById("userRef");
-const adsEl = document.getElementById("adsWatched");
-const withdrawnEl = document.getElementById("withdrawn");
-const refLinkEl = document.getElementById("refLink");
-
-// 🔹 Load user data
-async function loadUser() {
-  const userRef = ref(db, "users/" + userId);
-  const snap = await get(userRef);
-
-  if (!snap.exists()) {
-    await set(userRef, {
-      balance: 0,
-      referrals: 0,
-      adsWatched: 0,
-      withdrawn: 0
+    // First time create user
+    userRef.once("value", snap => {
+      if (!snap.exists()) {
+        userRef.set({
+          balance: 0,
+          adsWatched: 0,
+          createdAt: Date.now()
+        });
+      }
     });
-    return loadUser();
+
+    // Live update UI
+    userRef.on("value", snap => {
+      const data = snap.val();
+      if (!data) return;
+
+      document.getElementById("balance").innerText = data.balance;
+      document.getElementById("adsWatched").innerText = data.adsWatched;
+    });
   }
+});
 
-  const data = snap.val();
-  balanceEl.innerText = data.balance;
-  refEl.innerText = data.referrals;
-  adsEl.innerText = data.adsWatched;
-  withdrawnEl.innerText = data.withdrawn;
+// Watch Ad
+document.getElementById("watchAdBtn").addEventListener("click", () => {
 
-  refLinkEl.value = `${location.origin}/user/?ref=${userId}`;
-}
+  // Fake ad (later real ad)
+  alert("✅ Ad Finished");
 
-loadUser();
+  if (!userRef) return;
 
-// 📺 Watch Ad & Earn
-window.watchAd = async function () {
-  const userRef = ref(db, "users/" + userId);
-  const snap = await get(userRef);
-  const data = snap.val();
-
-  const newBalance = data.balance + 10; // per ad 10 taka
-  const newAds = data.adsWatched + 1;
-
-  await update(userRef, {
-    balance: newBalance,
-    adsWatched: newAds
+  userRef.transaction(data => {
+    if (data) {
+      data.adsWatched += 1;
+      data.balance += 10;
+    }
+    return data;
   });
 
-  alert("✅ Ad watched! 10 টাকা যোগ হয়েছে");
-  loadUser();
-};
-
-// 🏧 Withdraw Request
-window.requestWithdraw = async function () {
-  const amount = Number(document.getElementById("withdrawAmount").value);
-  const method = document.getElementById("withdrawMethod").value;
-  const number = document.getElementById("withdrawNumber").value;
-
-  if (!amount || !method || !number) {
-    alert("❌ সব তথ্য পূরণ করো");
-    return;
-  }
-
-  const userRef = ref(db, "users/" + userId);
-  const snap = await get(userRef);
-  const data = snap.val();
-
-  if (amount > data.balance) {
-    alert("❌ পর্যাপ্ত ব্যালেন্স নেই");
-    return;
-  }
-
-  // save withdraw request
-  await push(ref(db, "withdrawRequests"), {
-    userId,
-    amount,
-    method,
-    number,
-    status: "pending",
-    time: Date.now()
-  });
-
-  await update(userRef, {
-    balance: data.balance - amount
-  });
-
-  alert("✅ Withdraw request sent");
-  loadUser();
-};
-
-// 🔗 Copy referral link
-window.copyRef = function () {
-  refLinkEl.select();
-  document.execCommand("copy");
-  alert("✅ Referral link copied");
-};
+});
