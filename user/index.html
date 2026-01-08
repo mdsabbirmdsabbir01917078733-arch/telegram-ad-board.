@@ -1,35 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Double Earning Bot – Admin Panel</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>User Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+    }
+
+    header {
+      background: #020617;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      background: #020617;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .stat span {
+      display: block;
+      margin-top: 5px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #38bdf8;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .btn-earn {
+      background: #22c55e;
+      color: #000;
+    }
+
+    .btn-withdraw {
+      background: #facc15;
+      color: #000;
+    }
+
+    .btn-ref {
+      background: #38bdf8;
+      color: #000;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #020617;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      font-size: 14px;
+    }
+
+    footer div {
+      cursor: pointer;
+      color: #94a3b8;
+    }
+  </style>
 </head>
+
 <body>
 
-<div id="loginBox">
-  <h2>Admin Login</h2>
-  <input type="email" id="email" placeholder="Admin Email">
-  <input type="password" id="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-</div>
+<header>
+  💰 User Dashboard
+</header>
 
-<div id="dashboard" class="hidden">
-  <h2>Admin Dashboard</h2>
+<div class="container">
 
-  <div class="stats">
-    <p>👥 Total Users: <span id="totalUsers">0</span></p>
-    <p>💰 Total Earnings: <span id="totalEarnings">0</span></p>
-    <p>💸 Total Withdraw: <span id="totalWithdraw">0</span></p>
+  <!-- User Stats -->
+  <div class="card">
+    <div class="stats">
+      <div class="stat">
+        💵 Balance
+        <span id="userBalance">0</span>
+      </div>
+      <div class="stat">
+        👥 Referrals
+        <span id="userRef">0</span>
+      </div>
+      <div class="stat">
+        📺 Ads Watched
+        <span id="adsWatched">0</span>
+      </div>
+      <div class="stat">
+        🏧 Withdrawn
+        <span id="withdrawn">0</span>
+      </div>
+    </div>
   </div>
 
-  <h3>⏳ Withdraw Requests</h3>
-  <ul id="withdrawList"></ul>
+  <!-- Earn Section -->
+  <div class="card">
+    <h3>📺 Earn Money</h3>
+    <button class="btn-earn" onclick="watchAd()">Watch Ad & Earn</button>
+  </div>
+
+  <!-- Withdraw Section -->
+  <div class="card">
+    <h3>🏧 Withdraw</h3>
+
+    <input type="number" id="withdrawAmount" placeholder="Enter Amount" />
+
+    <select id="withdrawMethod">
+      <option value="">Select Method</option>
+      <option value="Bkash">Bkash</option>
+      <option value="Nagad">Nagad</option>
+    </select>
+
+    <input type="text" id="withdrawNumber" placeholder="Bkash/Nagad Number" />
+
+    <button class="btn-withdraw" onclick="requestWithdraw()">Request Withdraw</button>
+  </div>
+
+  <!-- Refer Section -->
+  <div class="card">
+    <h3>👥 Refer & Earn</h3>
+    <input type="text" id="refLink" readonly />
+    <button class="btn-ref" onclick="copyRef()">Copy Referral Link</button>
+  </div>
+
 </div>
 
-<!-- JS FILES (খুব গুরুত্বপূর্ণ) -->
-<script type="module" src="firebase.js"></script>
-<script type="module" src="admin.js"></script>
+<footer>
+  <div>🏠 Home</div>
+  <div>📺 Earn</div>
+  <div>👥 Refer</div>
+  <div>🏧 Withdraw</div>
+</footer>
+
+<!-- Firebase & User Logic -->
+<script type="module" src="./firebase.js"></script>
+<script type="module" src="./user.js"></script>
 
 </body>
 </html>
