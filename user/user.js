@@ -1,56 +1,47 @@
-// Telegram
-const tg = window.Telegram.WebApp;
-tg.ready();
+import { db } from "../firebase.js";
+import { ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
-// Firebase
-const auth = firebase.auth();
-const db = firebase.database();
+// 🔹 Temporary User ID (Telegram later connect হবে)
+const userId = "demo_user";
 
-let uid = null;
-let userRef = null;
+// UI elements
+const balanceEl = document.getElementById("balance");
+const adsEl = document.getElementById("ads");
+const btn = document.getElementById("watchAdBtn");
 
-// Login detect
-auth.onAuthStateChanged(user => {
-  if (user) {
-    uid = user.uid;
-    userRef = db.ref("users/" + uid);
+// Firebase path
+const userRef = ref(db, "users/" + userId);
 
-    // First time create user
-    userRef.once("value", snap => {
-      if (!snap.exists()) {
-        userRef.set({
-          balance: 0,
-          adsWatched: 0,
-          createdAt: Date.now()
-        });
-      }
-    });
-
-    // Live update UI
-    userRef.on("value", snap => {
-      const data = snap.val();
-      if (!data) return;
-
-      document.getElementById("balance").innerText = data.balance;
-      document.getElementById("adsWatched").innerText = data.adsWatched;
+// Load user data
+get(userRef).then(snapshot => {
+  if (snapshot.exists()) {
+    const data = snapshot.val();
+    balanceEl.innerText = data.balance;
+    adsEl.innerText = data.ads;
+  } else {
+    set(userRef, {
+      balance: 0,
+      ads: 0
     });
   }
 });
 
-// Watch Ad
-document.getElementById("watchAdBtn").addEventListener("click", () => {
+// Watch Ad button
+btn.addEventListener("click", () => {
+  get(userRef).then(snapshot => {
+    const data = snapshot.val();
 
-  // Fake ad (later real ad)
-  alert("✅ Ad Finished");
+    const newBalance = data.balance + 10;
+    const newAds = data.ads + 1;
 
-  if (!userRef) return;
+    update(userRef, {
+      balance: newBalance,
+      ads: newAds
+    });
 
-  userRef.transaction(data => {
-    if (data) {
-      data.adsWatched += 1;
-      data.balance += 10;
-    }
-    return data;
+    balanceEl.innerText = newBalance;
+    adsEl.innerText = newAds;
+
+    alert("Ad watched! +10 balance");
   });
-
 });
