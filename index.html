@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telegram Ad Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#0f172a;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      height:100vh;
+    }
+  </style>
+</head>
+<body>
+
+<script>
+  // Telegram WebApp detect
+  if (window.Telegram && Telegram.WebApp) {
+    // User Panel
+    window.location.href = "./user/index.html";
+  } else {
+    // Admin Panel
+    window.location.href = "./admin/index.html";
+  }
+</script>
+
+</body>
+</html>
