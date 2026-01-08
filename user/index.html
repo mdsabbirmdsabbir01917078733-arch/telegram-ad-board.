@@ -2,22 +2,20 @@
 <html>
 <head>
   <title>User Dashboard</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+  <h2>User Dashboard</h2>
 
-<h2>User Dashboard</h2>
+  <div>
+    Balance: <span id="balance">0</span> ৳<br>
+    Ads Watched: <span id="ads">0</span><br>
+    Referrals: <span id="ref">0</span>
+  </div>
 
-<p>Balance: <span id="balance">0</span></p>
-<p>Ads Watched: <span id="ads">0</span></p>
+  <button onclick="watchAd()">Watch Ad</button>
+  <button onclick="withdraw()">Withdraw</button>
 
-<button id="watchAdBtn">Watch Ad & Earn</button>
-
-<!-- 🔥 Firebase FIRST -->
-<script type="module" src="../firebase.js"></script>
-
-<!-- 🔥 User Logic -->
-<script type="module" src="user.js"></script>
-
+  <script type="module" src="firebase.js"></script>
+  <script type="module" src="user.js"></script>
 </body>
 </html>
