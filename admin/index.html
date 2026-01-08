@@ -1,49 +1,138 @@
-const loginBox = document.getElementById("loginBox");
-const dashboard = document.getElementById("dashboard");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel | Telegram Ad Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-window.login = function () {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  <!-- Firebase -->
+  <script src="firebase.js"></script>
 
-  signInWithEmailAndPassword(auth, email, password)
-    .then(() => {
-      loginBox.classList.add("hidden");
-      dashboard.classList.remove("hidden");
-      loadData();
-    })
-    .catch(() => alert("Login failed"));
-};
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+    }
+    header {
+      background: #020617;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .container {
+      padding: 15px;
+    }
+    .card {
+      background: #020617;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      color: #38bdf8;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .stat {
+      background: #020617;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .stat span {
+      display: block;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    table th, table td {
+      border-bottom: 1px solid #1e293b;
+      padding: 8px;
+      text-align: center;
+    }
+    button {
+      padding: 6px 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .approve {
+      background: #22c55e;
+      color: #000;
+    }
+    .reject {
+      background: #ef4444;
+      color: #fff;
+    }
+  </style>
+</head>
 
-function loadData() {
-  onValue(ref(db, "users"), snap => {
-    const users = snap.val() || {};
-    document.getElementById("totalUsers").innerText = Object.keys(users).length;
+<body>
 
-    let earnings = 0;
-    Object.values(users).forEach(u => earnings += u.totalEarned || 0);
-    document.getElementById("totalEarnings").innerText = earnings;
-  });
+<header>
+  🔐 Admin Panel – Telegram Ad Board
+</header>
 
-  onValue(ref(db, "withdrawRequests"), snap => {
-    const data = snap.val() || {};
-    const list = document.getElementById("withdrawList");
-    list.innerHTML = "";
+<div class="container">
 
-    Object.entries(data).forEach(([id, w]) => {
-      if (w.status === "pending") {
-        const li = document.createElement("li");
-        li.innerHTML = `
-          ${w.userId} - ৳${w.amount}
-          <button onclick="approve('${id}')">Approve</button>
-        `;
-        list.appendChild(li);
-      }
-    });
-  });
-}
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      👥 Total Users
+      <span id="totalUsers">0</span>
+    </div>
+    <div class="stat">
+      💰 Total Earnings
+      <span id="totalEarnings">৳0</span>
+    </div>
+    <div class="stat">
+      💸 Total Withdraw
+      <span id="totalWithdraw">৳0</span>
+    </div>
+    <div class="stat">
+      ⏳ Pending Withdraw
+      <span id="pendingWithdraw">0</span>
+    </div>
+  </div>
 
-window.approve = function (id) {
-  update(ref(db, "withdrawRequests/" + id), {
-    status: "approved"
-  });
-};
+  <!-- Withdraw Requests -->
+  <div class="card">
+    <h3>⏳ Withdraw Requests</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Amount</th>
+          <th>Method</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="withdrawList">
+        <tr>
+          <td colspan="4">Loading...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- Admin Logic -->
+<script src="admin.js"></script>
+
+</body>
+</html>
