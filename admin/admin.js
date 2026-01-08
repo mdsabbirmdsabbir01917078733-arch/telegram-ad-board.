@@ -1,21 +1,18 @@
-import { db } from "../firebase.js";
-import { ref, onValue } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { db } from './firebase.js';
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const usersDiv = document.getElementById("users");
+const ADMIN_ID = "YOUR_TELEGRAM_ID"; // 👉 এখানে নিজের Telegram ID বসাবে
 
-const usersRef = ref(db, "users");
+async function loadStats() {
+  const snap = await getDocs(collection(db, 'users'));
+  let users = snap.size;
+  let totalBalance = 0;
 
-onValue(usersRef, snapshot => {
-  usersDiv.innerHTML = "";
-  snapshot.forEach(child => {
-    const u = child.val();
-    usersDiv.innerHTML += `
-      <p>
-        User: ${child.key}<br>
-        Balance: ${u.balance}<br>
-        Ads: ${u.ads}
-      </p>
-      <hr>
-    `;
-  });
-});
+  snap.forEach(d => totalBalance += d.data().balance);
+
+  document.getElementById('stats').innerHTML = `
+    Users: ${users}<br>
+    Total Balance: ${totalBalance}
+  `;
+}
+loadStats();
