@@ -1,47 +1,30 @@
-import { db } from "../firebase.js";
-import { ref, get, set, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+import { db } from './firebase.js';
+import { doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔹 Temporary User ID (Telegram later connect হবে)
-const userId = "demo_user";
+// Telegram User ID
+const userId = Telegram.WebApp.initDataUnsafe.user.id.toString();
+const userRef = doc(db, 'users', userId);
 
-// UI elements
-const balanceEl = document.getElementById("balance");
-const adsEl = document.getElementById("ads");
-const btn = document.getElementById("watchAdBtn");
-
-// Firebase path
-const userRef = ref(db, "users/" + userId);
-
-// Load user data
-get(userRef).then(snapshot => {
-  if (snapshot.exists()) {
-    const data = snapshot.val();
-    balanceEl.innerText = data.balance;
-    adsEl.innerText = data.ads;
-  } else {
-    set(userRef, {
+async function loadUser() {
+  const snap = await getDoc(userRef);
+  if (!snap.exists()) {
+    await setDoc(userRef, {
       balance: 0,
-      ads: 0
+      ads: 0,
+      ref: 0
     });
   }
-});
+}
+loadUser();
 
-// Watch Ad button
-btn.addEventListener("click", () => {
-  get(userRef).then(snapshot => {
-    const data = snapshot.val();
-
-    const newBalance = data.balance + 10;
-    const newAds = data.ads + 1;
-
-    update(userRef, {
-      balance: newBalance,
-      ads: newAds
-    });
-
-    balanceEl.innerText = newBalance;
-    adsEl.innerText = newAds;
-
-    alert("Ad watched! +10 balance");
+window.watchAd = async () => {
+  await updateDoc(userRef, {
+    ads: increment(1),
+    balance: increment(1) // per ad earning ADMIN থেকে আসবে (future)
   });
-});
+  location.reload();
+}
+
+window.withdraw = async () => {
+  alert('Withdraw request submitted');
+}
